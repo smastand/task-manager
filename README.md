@@ -1,5 +1,5 @@
 # Task Manager
-Task Manager is a Python program that manages assignments and deadlines for tasks.
+Task Manager is a Python program that manages assignments and deadlines for tasks using Tkinter GUI.
 
 ## Getting Started
 ### Requirements
@@ -12,7 +12,7 @@ Loading a different data set into the program will work,
 but change the 'data_file' name to match at the top of the program.
 
 ### Execution
-Simply run the script by whatever your preferred method is.
+Simply run main.py using whatever your preferred method is.
 The program will open a new GUI window to operate the program.
 
 ## Functionality

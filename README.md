@@ -1,6 +1,10 @@
 # Task Manager
 Task Manager is a Python program that manages assignments and deadlines for tasks using Tkinter GUI.
 
+**NOTE** There is currently a bug where the status of a task just created will not update; it will instead be stuck on Not Started.
+
+Until this is patched, close and re-open Task Manager to update the new task.
+
 ## Getting Started
 ### Requirements
 - Python compiler or IDE

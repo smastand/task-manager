@@ -6,6 +6,7 @@ from numpy import max, select
 from random import randint
 
 data_file = 'tasks.csv'
+column_names = ['name', 'weight', 'created_date', 'due_date', 'status']
 
 def write():
     df.to_csv(data_file, index=False)
@@ -13,7 +14,7 @@ def write():
 try:
     df = pd.read_csv(data_file)
 except FileNotFoundError:
-    df = pd.DataFrame(columns=['name', 'weight', 'created_date', 'due_date', 'status'])
+    df = pd.DataFrame(columns=column_names)
     write()
 date_format = df.loc[:, 'created_date']
 df['created_date'] = [dt.datetime.strptime(day, "%Y-%m-%d").date() for day in date_format]
@@ -54,6 +55,7 @@ new_task_row2 = tk.Frame(new_task_frame)
 new_task_row2.grid(column=0, row=1, sticky='nw')
 
 def new_task():
+    global df
     name = new_task_name.get().title()
     try:
         weight = int(new_task_weight.get()) or 0
@@ -73,11 +75,11 @@ def new_task():
             month = int(new_task_month.get())
             day = int(new_task_day.get())
             if 1 <= month <= 12 and 1 <= day <= max_day(month, dt.date.today().year + 1):
-                date = date.replace(month=month, day=day)
+                date.replace(month=month, day=day)
                 if dt.date.today() > date:
-                    date = date.replace(year=date.year + 1)
-                new_row = [name, weight, dt.date.today(), date, 0]
-                df.loc[len(df)] = new_row
+                    date.replace(year=date.year + 1)
+                new_row = pd.DataFrame([dict(zip(column_names, [name, weight, dt.date.today(), date, 0]))])
+                df = pd.concat([df, new_row], ignore_index=True)
                 write()
                 display['fg'] = 'limegreen'
                 display.config(text=f'Added {name} to task list to do by {date:%B %d, %Y}')
@@ -87,8 +89,8 @@ def new_task():
                 new_task_day.delete(0, 'end')
                 select_dropdown.config(values=df['name'].tolist())
                 return
-        except ValueError:
-            pass
+        except ValueError as e:
+            print(str(e))
         display['fg'] = 'crimson' if display['fg'] == 'red' else 'red'
         display.config(text='Please enter a valid todo by date!')
 
@@ -180,7 +182,7 @@ def update_task():
         ('Not Started.', 'In Progress.', 'Reviewing.', 'done!')[current_status]}')
         index = df.index[df['name'] == active_task].tolist()[0]
         if current_status == 3:
-            df = df.drop(index)
+            df = df.drop(df.index[index])
             status_reset()
             select_dropdown.set('Choose a Task...')
             select_dropdown.config(values=df['name'].tolist())
@@ -382,7 +384,6 @@ def algorithm_task():
                 created_date = final['created_date'].tolist()
                 final.loc[:, 'percentage'] = [((due - dt.date.today()).days + 0.1) / ((due - created).days + 1)
                                               for due, created in zip(due_date, created_date)]
-                print(final)
     index = final.index[0] if index == -1 else index
 
     close_window_button = tk.Button(task_popup_window, text='CLOSE', command=task_popup_window.destroy,

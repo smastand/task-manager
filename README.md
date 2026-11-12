@@ -79,6 +79,8 @@ If you want to load a new task set, make sure it is a dataset with those five co
 Shawn Mastandrea
 
 ## Version History
+- v1.1 : November 2026
+    - Fixed bugs regarding task creation and completion
 - v1 : October 2026
     - Initial GitHub release
 

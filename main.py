@@ -75,9 +75,9 @@ def new_task():
             month = int(new_task_month.get())
             day = int(new_task_day.get())
             if 1 <= month <= 12 and 1 <= day <= max_day(month, dt.date.today().year + 1):
-                date.replace(month=month, day=day)
+                date = date.replace(month=month, day=day)
                 if dt.date.today() > date:
-                    date.replace(year=date.year + 1)
+                    date = date.replace(year=date.year + 1)
                 new_row = pd.DataFrame([dict(zip(column_names, [name, weight, dt.date.today(), date, 0]))])
                 df = pd.concat([df, new_row], ignore_index=True)
                 write()
